@@ -1,8 +1,6 @@
-import os
 import numpy as np
 import pygame
 
-os.add_dll_directory(r"D:\TDM-GCC-64\bin")
 import phys_engine
 
 

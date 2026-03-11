@@ -1,13 +1,10 @@
-import os
 import numpy as np
 import pygame
 import random
 
-# 1. DLL Setup
-os.add_dll_directory(r"D:\TDM-GCC-64\bin")
+
 import phys_engine
 
-# 2. Constants
 N_PARTICLES = 5000
 WIDTH, HEIGHT = 1280, 720
 DT = 0.1

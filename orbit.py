@@ -1,9 +1,7 @@
-import os
 import numpy as np
 import pygame
 import random
 
-os.add_dll_directory(r"D:\TDM-GCC-64\bin")
 import phys_engine
 
 N_PLANETS = 100
