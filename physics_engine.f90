@@ -47,18 +47,15 @@ subroutine resolve_collisions(pos, vel, n, radius)
             dist_sq = dx*dx + dy*dy
             
             if (dist_sq < min_dist_sq .and. dist_sq > 0) then
-                ! 1. Normal vector between particles
+                
                 nx = dx / sqrt(dist_sq)
                 ny = dy / sqrt(dist_sq)
                 
-                ! 2. Relative velocity
                 relative_vel_x = vel(1, i) - vel(1, j)
                 relative_vel_y = vel(2, i) - vel(2, j)
                 
-                ! 3. Dot product (how much they are moving toward each other)
                 dot_product = relative_vel_x * nx + relative_vel_y * ny
                 
-                ! 4. Only bounce if they are moving toward each other
                 if (dot_product > 0) then
                     vel(1, i) = vel(1, i) - dot_product * nx
                     vel(2, i) = vel(2, i) - dot_product * ny
@@ -82,7 +79,6 @@ subroutine apply_constraints(pos, n, rest_len)
     integer :: i
     real(8) :: dx, dy, dist, diff, percent, offset_x, offset_y
 
-    ! We loop from 1 to n-1, connecting particle i to i+1
     do i = 1, n - 1
         dx = pos(1, i+1) - pos(1, i)
         dy = pos(2, i+1) - pos(2, i)
@@ -91,18 +87,14 @@ subroutine apply_constraints(pos, n, rest_len)
         if (dist > 0) then
             diff = (rest_len - dist) / dist
             
-            ! Push/Pull particles toward each other
-            ! We multiply by 0.5 because each particle moves half the distance
             offset_x = dx * diff * 0.5_8
             offset_y = dy * diff * 0.5_8
             
-            ! Particle 1 (Stay fixed if i=1 for the 'anchor' effect)
             if (i > 1) then
                 pos(1, i) = pos(1, i) - offset_x
                 pos(2, i) = pos(2, i) - offset_y
             end if
             
-            ! Particle 2
             pos(1, i+1) = pos(1, i+1) + offset_x
             pos(2, i+1) = pos(2, i+1) + offset_y
         end if
@@ -128,12 +120,11 @@ subroutine apply_orbital_gravity(pos, acc, n, sun_x, sun_y, gravity_const)
         dy = sun_y - pos(2, i)
         dist_sq = dx*dx + dy*dy
         
-        if (dist_sq > 100.0_8) then ! Prevent "division by zero" explosion
+        if (dist_sq > 100.0_8) then
             dist = sqrt(dist_sq)
-            ! Newtonian Gravity: F = G / r^2
+
             force_mag = gravity_const / dist_sq
             
-            ! Directional acceleration
             acc(1, i) = force_mag * (dx / dist)
             acc(2, i) = force_mag * (dy / dist)
         else
